@@ -16,6 +16,7 @@ if sys.getdefaultencoding() != 'utf-8':
     reload(sys)
     sys.setdefaultencoding('utf-8')
 
+bootHelperMatchKey = '{#bootHelper}'
 splashMatchKey = '{#splash}'
 settingMatchKey = '{#settings}'
 mainMatchKey = '{#main}'
@@ -100,11 +101,13 @@ def addPlistSupport(mainStr):
     return newMainStr
 
 
-def integrate(projectRootPath):
+def integrate(projectRootPath, bootType):
     htmlPath = clarifyFilename(
         projectRootPath + '/build/web-mobile/index.html')
     pathlib.Path('./build/playable').mkdir(parents=True, exist_ok=True) 
     newHtmlPath = './build/playable/index.html'
+    bootHelperScrPath = clarifyFilename(
+        projectRootPath + '/build-helpers/' + bootType + '.js')
     settingScrPath = clarifyFilename(
         projectRootPath + '/build/web-mobile/src/settings.*js')
     mainScrPath = clarifyFilename(
@@ -124,6 +127,9 @@ def integrate(projectRootPath):
         projectRootPath + '/build/web-mobile/assets/main/config*.json'))
 
     htmlStr = read_in_chunks(htmlPath)
+    bootHelperStr = read_in_chunks(bootHelperScrPath)
+    htmlStr = htmlStr.replace(bootHelperMatchKey, bootHelperStr, 1)
+    
     settingsStr = read_in_chunks(settingScrPath)
     htmlStr = htmlStr.replace(settingMatchKey, settingsStr, 1)
 
@@ -160,4 +166,4 @@ def integrate(projectRootPath):
 
 if __name__ == '__main__':
     workDir = os.getcwd() + ""
-    integrate(workDir)
+    integrate(workDir, "default")
