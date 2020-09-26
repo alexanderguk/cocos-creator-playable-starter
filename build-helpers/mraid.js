@@ -10,7 +10,7 @@ function viewableChangeHandler(viewable) {
     if (!isBooted) {
       isMRAIDready = true;
       if (isReadyToBoot && isMRAIDready) {
-        boot();
+        startTheGame();
       }
     } else {
       cc.game.resume();
@@ -32,13 +32,13 @@ function onSdkReady() {
 
 const mraidBootListener = (event) => {
   isReadyToBoot = true;
-  window.removeEventListener("readyToBoot");
+  window.removeEventListener("readyToStart");
 
   if (isReadyToBoot && isMRAIDready) {
-    boot();
+    startTheGame();
   }
 
-  window.removeEventListener("readyToBoot", mraidBootListener);
+  window.removeEventListener("readyToStart", mraidBootListener);
 };
 
-window.addEventListener("readyToBoot", mraidBootListener);
+window.addEventListener("readyToStart", mraidBootListener);

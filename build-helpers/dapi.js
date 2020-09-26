@@ -107,7 +107,7 @@ function adVisibleCallback(event) {
     } else {
       isDAPIready = true;
       if (isReadyToBoot && isDAPIready) {
-        boot();
+        startTheGame();
       }
     }
   } else {
@@ -136,13 +136,13 @@ function audioVolumeChangeCallback(volume) {
 
 const dapiBootListener = (event) => {
   isReadyToBoot = true;
-  window.removeEventListener("readyToBoot");
+  window.removeEventListener("readyToStart");
 
   if (isReadyToBoot && isDAPIready) {
-    boot();
+    startTheGame();
   }
 
-  window.removeEventListener("readyToBoot", dapiBootListener);
+  window.removeEventListener("readyToStart", dapiBootListener);
 };
 
-window.addEventListener("readyToBoot", dapiBootListener);
+window.addEventListener("readyToStart", dapiBootListener);

@@ -1,11 +1,7 @@
 var isBooted = false;
+var sceneToLoad = null;
 
 function boot() {
-  if (isBooted) {
-    return;
-  }
-  isBooted = true;
-
   var settings = window._CCSettings;
   window._CCSettings = undefined;
   var onProgress = null;
@@ -16,6 +12,7 @@ function boot() {
     MAIN,
     START_SCENE,
   } = cc.AssetManager.BuiltinBundleName;
+
   function setLoadingDisplay() {
     // Loading splash scene
     var splash = document.getElementById("splash");
@@ -32,6 +29,16 @@ function boot() {
     cc.director.once(cc.Director.EVENT_AFTER_SCENE_LAUNCH, function () {
       splash.style.display = "none";
     });
+  }
+
+  function showSplash() {
+    var splash = document.getElementById("splash");
+    splash.style.display = "block";
+  }
+
+  function hideSplash() {
+    var splash = document.getElementById("splash");
+    splash.style.display = "none";
   }
 
   var onStart = function () {
@@ -74,7 +81,8 @@ function boot() {
 
     bundle.loadScene(launchScene, null, onProgress, function (err, scene) {
       if (!err) {
-        cc.director.runSceneImmediate(scene);
+        sceneToLoad = scene;
+        window.dispatchEvent(new CustomEvent("readyToStart"));
         if (cc.sys.isBrowser) {
           // show canvas
           var canvas = document.getElementById("GameCanvas");
@@ -115,7 +123,6 @@ function boot() {
     if (err) return console.error(err.message, err.stack);
     count++;
     if (count === bundleRoot.length + 1) {
-      console.log("cc.game.run");
       cc.game.run(option, onStart);
     }
   }
@@ -360,9 +367,19 @@ if (window.document) {
   cc.assetManager.downloader.register(".m4a", loadAudio);
   cc.assetManager.downloader.register(".ttf", loadFont);
 
-  var splash = document.getElementById("splash");
-  splash.style.display = "block";
   cc.macro.CLEANUP_IMAGE_CACHE = true;
 
-  window.dispatchEvent(new CustomEvent("readyToBoot"));
+  boot();
+}
+
+function startTheGame() {
+  if (isBooted) {
+    return;
+  }
+  isBooted = true;
+
+  cc.director.runSceneImmediate(sceneToLoad, function () {
+    var canvas = document.getElementById("GameCanvas");
+    canvas.style.display = "block";
+  });
 }

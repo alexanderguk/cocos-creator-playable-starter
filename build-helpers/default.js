@@ -1,6 +1,6 @@
 const defaultBootListener = (event) => {
-  boot();
-  window.removeEventListener("readyToBoot", defaultBootListener);
+  startTheGame();
+  window.removeEventListener("readyToStart", defaultBootListener);
 };
 
-window.addEventListener("readyToBoot", defaultBootListener);
+window.addEventListener("readyToStart", defaultBootListener);
