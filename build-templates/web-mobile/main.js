@@ -161,6 +161,12 @@ if (window.document) {
     onComplete(null, data);
   };
 
+  // Plist
+  var loadPlist = function (nameOrUrl, options, onComplete) {
+    var data = window.resMap[nameOrUrl];
+    onComplete(null, data);
+  };
+
   // Image
   function loadDomImage(url, options, onComplete) {
     var index = url.lastIndexOf(".");
@@ -358,6 +364,7 @@ if (window.document) {
 
   cc.assetManager.downloader.register("bundle", loadBundle);
   cc.assetManager.downloader.register(".json", loadJson);
+  cc.assetManager.downloader.register(".plist", loadPlist);
   cc.assetManager.downloader.register(".png", loadImage);
   cc.assetManager.downloader.register(".jpg", loadImage);
   cc.assetManager.downloader.register(".jpeg", loadImage);
